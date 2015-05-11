@@ -12,7 +12,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -29,7 +29,7 @@ namespace Melloware.DACP {
 	/// </summary>
 	public class CtrlIntNode:DACPResponse {
 		// logger
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		
 		//fields
@@ -50,7 +50,7 @@ namespace Melloware.DACP {
 		/// Default constructor
 		/// </summary>
 		public CtrlIntNode() {
-			LOG.Debug("Creating CtrlIntNode...");
+			Console.WriteLine("Creating CtrlIntNode...");
 			this.Miid = 1;
 			this.Cmik = TRUE;
 			this.Cmpr = (int)0x00020001;

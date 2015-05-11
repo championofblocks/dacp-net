@@ -14,7 +14,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
-using log4net;
+//using log4net;
 using Melloware.Core;
 using Microsoft.Xml.Serialization.GeneratedAssembly;
 
@@ -28,7 +28,7 @@ namespace Melloware.DACP {
 
         // logger
         private static readonly Type CLAZZ_TYPE = System.Reflection.MethodBase.GetCurrentMethod().DeclaringType;
-        private static readonly ILog LOG = LogManager.GetLogger(CLAZZ_TYPE);
+        //private static readonly ILog LOG = LogManager.GetLogger(CLAZZ_TYPE);
 
         // serializable fields
         public bool ShowParentPlaylists = true;
@@ -39,7 +39,7 @@ namespace Melloware.DACP {
         /// Default constructor
         /// </summary>
         public DACPPairingDatabase() {
-            LOG.Info("Creating DACPPairingDatabase....");
+            Console.WriteLine("Creating DACPPairingDatabase....");
         }
 
         /// <summary>
@@ -48,13 +48,13 @@ namespace Melloware.DACP {
         /// </summary>
         /// <returns>a DACPPairingDatabase object</returns>
         public static DACPPairingDatabase Initialize(DACPServer dacpServer) {
-            LOG.Info("Initializing DACPPairingDatabase");
+            Console.WriteLine("Initializing DACPPairingDatabase");
             DACPPairingDatabase database = new DACPPairingDatabase();
             database.Server = dacpServer;
 
             string fileName = database.GetFileName();
             if (File.Exists(fileName)) {
-                LOG.InfoFormat("Deserializing XML file: {0}", fileName);
+                Console.WriteLine("Deserializing XML file: {0}", fileName);
 
                 try {
                 	DACPPairingDatabaseSerializer serializer = new DACPPairingDatabaseSerializer();
@@ -64,7 +64,7 @@ namespace Melloware.DACP {
                         database.Server = dacpServer;
                     }
                 } catch (Exception ex) {
-                    LOG.Error("XML Exception", ex);
+                    Console.WriteLine("XML Exception", ex);
                     database = new DACPPairingDatabase();
                     database.Server = dacpServer;
                 }
@@ -79,7 +79,7 @@ namespace Melloware.DACP {
         public void Store() {
             try {
                 string fileName = this.GetFileName();
-                LOG.InfoFormat("Serializing XML file: {0}", fileName);
+                Console.WriteLine("Serializing XML file: {0}", fileName);
 
                 DACPPairingDatabaseSerializer serializer = new DACPPairingDatabaseSerializer();
                 // XmlSerializer serializer = new XmlSerializer(CLAZZ_TYPE);
@@ -87,7 +87,7 @@ namespace Melloware.DACP {
                     serializer.Serialize(stream, this);
                 }
             } catch (Exception ex) {
-                LOG.Error("XML Exception", ex);
+                Console.WriteLine("XML Exception", ex);
                 throw ex;
             }
         }
@@ -100,7 +100,7 @@ namespace Melloware.DACP {
         /// <param name="guid">the GUID to validate</param>
         /// <returns>an int SessionId of the session for the GUID</returns>
         public int ValidateGuid(ulong guid) {
-            LOG.DebugFormat("Validating GUID = {0}", guid);
+            Console.WriteLine("Validating GUID = {0}", guid);
 
             if (!this.DACPClients.ContainsKey(guid)) {
                 // cheat here if GUID is 1 for Android pairing

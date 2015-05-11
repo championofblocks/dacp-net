@@ -15,7 +15,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -94,7 +94,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class AlbumsResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private LinkedList<AlbumNode> mlcl = new LinkedList<AlbumNode>();
@@ -111,7 +111,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public AlbumsResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating AlbumsResponse...");
+            Console.WriteLine("Creating AlbumsResponse...");
             this.Muty = 0;
         }
 

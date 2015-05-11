@@ -12,7 +12,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -37,7 +37,7 @@ namespace Melloware.DACP {
     ///      mimc   4      00000102 == 258 #item count
     /// </summary>
     public class PlaylistNode:BaseNode {
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         // constants for special playlist type
         public const byte PLAYLIST_TYPE_PODCASTS = 1;
@@ -74,7 +74,7 @@ namespace Melloware.DACP {
         /// Default constructor
         /// </summary>
         public PlaylistNode() {
-            LOG.Debug("Creating Playlist Node...");
+            Console.WriteLine("Creating Playlist Node...");
             this.Miid = 0;
             this.Mper = (ulong)this.GetHashCode();
             this.Minm = "Music";

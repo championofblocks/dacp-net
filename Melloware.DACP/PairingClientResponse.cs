@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Text;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -29,10 +29,10 @@ namespace Melloware.DACP {
     ///     cmty 4 648a861f == ipod
     /// </summary>
     public class PairingClientResponse:DACPResponse {
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public PairingClientResponse() {
-            LOG.Debug("Creating PairingClientResponse...");
+            Console.WriteLine("Creating PairingClientResponse...");
             this.Cmpg = "\x00\x00\x00\x00\x00\x00\x00\x01";
             this.Cmnm = "devicename";
             this.Cmty = "ipod";

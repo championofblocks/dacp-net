@@ -23,7 +23,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-using log4net;
+////using log4net;
 using ZeroconfService;
 using Melloware.Core;
 
@@ -49,7 +49,7 @@ namespace Melloware.DACP {
         protected const string ITUNES_MEDIAKIND_AUDIOBOOK = "8";
 
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         public static int PORT = 3689;
@@ -69,7 +69,7 @@ namespace Melloware.DACP {
 
 
         public DACPServer() {
-            LOG.Info("Initializing DACPServer");
+            Console.WriteLine("Initializing DACPServer");
             this.version = GetVersion();
         }
 
@@ -77,7 +77,7 @@ namespace Melloware.DACP {
         /// Starts the DACP Server including any mDNS Services.
         /// </summary>
         protected virtual void Start() {
-            LOG.InfoFormat("Starting DACPServer...");
+            Console.WriteLine("Starting DACPServer...");
             try {
                 bool portAvailable = false;
                 do {
@@ -92,10 +92,10 @@ namespace Melloware.DACP {
                 PublishMdnsServices();
                 StartNonblockingHttpListener();
             } catch (DACPBonjourException bex) {
-                LOG.Error(this.GetApplicationName() + " Bonjour Error: " + bex.Message);
+                Console.WriteLine(this.GetApplicationName() + " Bonjour Error: " + bex.Message);
                 throw bex;
             } catch (Exception ex) {
-            	LOG.Error(this.GetApplicationName() + "Unexpected Exception caught: " + ex.Message);
+            	Console.WriteLine(this.GetApplicationName() + "Unexpected Exception caught: " + ex.Message);
                 throw ex;
             }
         }
@@ -106,7 +106,7 @@ namespace Melloware.DACP {
         /// <param name="port">the port # to check</param>
         /// <returns>true if available, false if not available</returns>
         private bool FindNextAvailablePort(int port) {
-            LOG.InfoFormat("Checking Port {0}", port);
+            Console.WriteLine("Checking Port {0}", port);
             bool isAvailable = true;
 
             // Evaluate current system tcp connections. This is the same information provided
@@ -123,7 +123,7 @@ namespace Melloware.DACP {
                 }
             }
 
-            LOG.InfoFormat("Port {0} available = {1}", port, isAvailable);
+            Console.WriteLine("Port {0} available = {1}", port, isAvailable);
 
             return isAvailable;
         }
@@ -133,7 +133,7 @@ namespace Melloware.DACP {
         /// </summary>
         protected virtual void Stop() {
             try {
-                LOG.Info("Shutting down DACPServer...");
+                Console.WriteLine("Shutting down DACPServer...");
                 ReleaseAllLatches();
 
                 if (PairingDatabase != null) {
@@ -158,7 +158,7 @@ namespace Melloware.DACP {
                     httpServer.Stop();
                 }
             } catch (Exception ex) {
-                LOG.Error("DACP Server Shutdown Error: " + ex.Message, ex);
+                Console.WriteLine("DACP Server Shutdown Error: " + ex.Message, ex);
             }
         }
 
@@ -239,7 +239,7 @@ namespace Melloware.DACP {
         /// Creates a NonBlocking listener to handle each HTTP request in a thread.
         /// </summary>
         private void StartNonblockingHttpListener() {
-            LOG.InfoFormat("Starting Listener http://+:{0}/...", PORT);
+            Console.WriteLine("Starting Listener http://+:{0}/...", PORT);
             httpServer.Prefixes.Add("http://+:"+PORT+"/");
             httpServer.Start();
             // Move our listening loop off to a worker thread so that the GUI doesn't lock up.
@@ -257,7 +257,7 @@ namespace Melloware.DACP {
         			listenForNextRequest.WaitOne();
         		}
         	} catch (Exception httpEx) {
-        		LOG.Error("HTTP Listen Error: " + httpEx.Message, httpEx);
+        		Console.WriteLine("HTTP Listen Error: " + httpEx.Message, httpEx);
         	}
         }
 
@@ -272,7 +272,7 @@ namespace Melloware.DACP {
                 HttpListener listener = (HttpListener) result.AsyncState;
                 HttpListenerContext context = null;
                 if (listener == null) {
-                    LOG.WarnFormat("Listener null so returning...");
+                    Console.WriteLine("Listener null so returning...");
                     return;
                 }
 
@@ -285,7 +285,7 @@ namespace Melloware.DACP {
                     // because there will be a thread stopped waiting on the .EndGetContext()
                     // method, and again, that is just the way most Begin/End asynchronous
                     // methods of the .NET Framework work.
-                    LOG.WarnFormat("HttpListener Stopped: {0}", ex.Message);
+                    Console.WriteLine("HttpListener Stopped: {0}", ex.Message);
                     ReleaseAllLatches();
                     return;
                 } finally {
@@ -298,20 +298,21 @@ namespace Melloware.DACP {
 
                 if (context == null) return;
 
-                LOG.DebugFormat("HTTP START: {0}", DateTime.Now.ToString());
+                Console.WriteLine("HTTP START: {0}", DateTime.Now.ToString());
 
                 System.Net.HttpListenerRequest request = context.Request;
-                LOG.InfoFormat("{0}: {1}", PORT, request.RawUrl);
+                Console.WriteLine("{0}: {1}", PORT, request.RawUrl);
                 if (request.HasEntityBody) {
                     using (System.IO.StreamReader sr = new System.IO.StreamReader(request.InputStream, request.ContentEncoding)) {
                         string requestData = sr.ReadToEnd();
                     }
                 }
                 
-                if (LOG.IsDebugEnabled) {
-                	LOG.DebugFormat("    HTTP User-Agent: {0}", request.UserAgent);
+				bool debug_enabled = true;
+                if (debug_enabled) {
+                	Console.WriteLine("    HTTP User-Agent: {0}", request.UserAgent);
                 	foreach ( String s in request.Headers.AllKeys )
-                		LOG.DebugFormat("    Header {0,-10} {1}", s, request.Headers[s] );
+                		Console.WriteLine("    Header {0,-10} {1}", s, request.Headers[s] );
                 }
                
                 
@@ -319,7 +320,7 @@ namespace Melloware.DACP {
                 // determine if the client is requesting a compressed response
                 string acceptEncoding = request.Headers["Accept-Encoding"];
                 bool isCompressed = (!string.IsNullOrEmpty(acceptEncoding) && (acceptEncoding.Contains("gzip") || acceptEncoding.Contains("deflate")));
-                LOG.DebugFormat("Accept-Encoding: {0} Compressed: {1}", acceptEncoding, isCompressed);
+                Console.WriteLine("Accept-Encoding: {0} Compressed: {1}", acceptEncoding, isCompressed);
 
                 // Obtain a response object
                 using (System.Net.HttpListenerResponse response = context.Response) {
@@ -328,21 +329,21 @@ namespace Melloware.DACP {
                         response.AddHeader("DAAP-Server", this.GetApplicationName() + " " + this.Version);
                         this.DispatchRequest(request, response, isCompressed);
                     } catch (DACPSecurityException ex) {
-                        LOG.Error("DACP Security Error: " + ex.Message);
+                        Console.WriteLine("DACP Security Error: " + ex.Message);
                         response.StatusCode = (int)HttpStatusCode.Forbidden;
                         response.OutputStream.WriteByte(0);
                     } catch (Exception ex) {
-                        LOG.Error("DACP Server Error: " + ex.Message);
+                        Console.WriteLine("DACP Server Error: " + ex.Message);
                         response.StatusCode = DACPResponse.MSTT_NO_CONTENT;
                         response.OutputStream.WriteByte(0);
                     }
                 }
             } catch (Exception httpEx) {
-                LOG.Error("DACP Server Error: " + httpEx.Message, httpEx);
+                Console.WriteLine("DACP Server Error: " + httpEx.Message, httpEx);
             }
 
 
-            LOG.DebugFormat("HTTP END: {0}", DateTime.Now.ToString());
+            Console.WriteLine("HTTP END: {0}", DateTime.Now.ToString());
         }
 
         private void DispatchRequest(HttpListenerRequest request, HttpListenerResponse response, bool isCompressed) {
@@ -427,7 +428,7 @@ namespace Melloware.DACP {
                             ControlClearQueue(request);
                         } else {
                             ClearQueue = false;
-                            LOG.Info("Clearing Playlist Cue disabled by RespectClearCueCommand in XML properties!");
+                            Console.WriteLine("Clearing Playlist Cue disabled by RespectClearCueCommand in XML properties!");
                         }
                     } else if (url.Contains("cue?command=play")) {
                 		// check for the clear flag
@@ -470,10 +471,10 @@ namespace Melloware.DACP {
                     } else if (url.Contains("set-genius-seed")) {
                         ControlGeniusSeed(request);
                     } else {
-                        LOG.WarnFormat("Unknown URL type: {0}", request.RawUrl);
+                        Console.WriteLine("Unknown URL type: {0}", request.RawUrl);
                     }
                 } else {
-                    LOG.WarnFormat("Unknown URL type: {0}", request.RawUrl);
+                    Console.WriteLine("Unknown URL type: {0}", request.RawUrl);
                 }
 
                 // return a NO Content found if either null or is marker interface
@@ -484,7 +485,7 @@ namespace Melloware.DACP {
                 
                 // return a 500 Internal Server Error
                 if  (dacpResponse is IErrorResponse) {
-                	LOG.Warn("500 Internal Server Error Response");
+                	Console.WriteLine("500 Internal Server Error Response");
                     response.StatusCode = DACPResponse.MSTT_ERROR;
                     return;
                 }
@@ -508,16 +509,16 @@ namespace Melloware.DACP {
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.OutputStream.Write(responseBytes, 0, responseBytes.Length);
             } catch (Exception ex) {
-                LOG.Error(this.GetApplicationName() + " Error: " + ex.Message, ex);
+                Console.WriteLine(this.GetApplicationName() + " Error: " + ex.Message, ex);
                 response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
             } finally {
              	if (stopWatch != null) {
              		// Get the elapsed time as a TimeSpan value.
              		TimeSpan ts = stopWatch.Elapsed;
              		if (ts.TotalMilliseconds > 2500) {
-             			LOG.WarnFormat("DACP Response Time Exceeded Threshold: {0,21} '{1}'", ts.TotalMilliseconds, url);
+             			Console.WriteLine("DACP Response Time Exceeded Threshold: {0,21} '{1}'", ts.TotalMilliseconds, url);
              		} else {
-             			LOG.DebugFormat("DACP Response Time: {0,21}", ts.TotalMilliseconds);
+             			Console.WriteLine("DACP Response Time: {0,21}", ts.TotalMilliseconds);
              		}
              	}
             }
@@ -532,7 +533,7 @@ namespace Melloware.DACP {
         /// HTTP requests from DACP Clients that have been blocking.
         /// </summary>
         public static void ReleaseAllLatches() {
-            LOG.DebugFormat("Releasing {0} CountDownLatches", latches.Count);
+            Console.WriteLine("Releasing {0} CountDownLatches", latches.Count);
             foreach (CountDownLatch latch in latches) {
                 latch.CountDown();
             }
@@ -573,7 +574,7 @@ namespace Melloware.DACP {
             if (asm != null) {
                 AssemblyName asmName = asm.GetName();
                 version = String.Format("{0}", asmName.Version );
-                LOG.Info(version);
+                Console.WriteLine(version);
             }
             return version;
         }
@@ -592,7 +593,7 @@ namespace Melloware.DACP {
             // Grab the first IP addresses
             foreach(IPAddress ipaddress in iphostentry.AddressList) {
                 if (ipaddress.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
-                    LOG.InfoFormat("IP Address : {0}", ipaddress.ToString());
+                    Console.WriteLine("IP Address : {0}", ipaddress.ToString());
                     result = ipaddress;
                     break;
                 }
@@ -616,9 +617,9 @@ namespace Melloware.DACP {
         /// server on the iPhone/Android device.
         /// </summary>
         private void PublishMdnsServices() {
-            LOG.Debug("Publishing mDNS Service...");
+            Console.WriteLine("Publishing mDNS Service...");
             try {
-                LOG.DebugFormat("mDNS Version: {0}", NetService.DaemonVersion);
+                Console.WriteLine("mDNS Version: {0}", NetService.DaemonVersion);
                 string name = this.GetApplicationName() +" "+ Environment.MachineName;
                 string hash = name.GetHashCode().ToString("X");
                 hash = hash+hash;
@@ -687,7 +688,7 @@ namespace Melloware.DACP {
                 /* HTTP-Service has no service record */
                 webService.Publish();
             } catch (Exception ex) {
-                LOG.Error("Error publishing mDNS Services", ex);
+                Console.WriteLine("Error publishing mDNS Services", ex);
             }
         }
 
@@ -696,7 +697,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="service">the NetService published</param>
         void publishService_DidPublishService(NetService service) {
-            LOG.InfoFormat("Published mDNS Service: domain({0}) type({1}) name({2})", service.Domain, service.Type, service.Name);
+            Console.WriteLine("Published mDNS Service: domain({0}) type({1}) name({2})", service.Domain, service.Type, service.Name);
         }
 
         /// <summary>
@@ -705,7 +706,7 @@ namespace Melloware.DACP {
         /// <param name="service">the NetService NOT published</param>
         /// <param name="exception">the Exception reason why the service was not published</param>
         void publishService_DidNotPublishService(NetService service, DNSServiceException exception) {
-            LOG.InfoFormat("DNSServiceException occured: {0}", exception.Message);
+            Console.WriteLine("DNSServiceException occured: {0}", exception.Message);
         }
 
 

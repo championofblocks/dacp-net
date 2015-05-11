@@ -13,7 +13,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+////using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -34,7 +34,7 @@ namespace Melloware.DACP {
     ///             mimc   4      0000000c == 12
     /// </summary>
     public class ArtistNode:BaseNode {
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Default constructor

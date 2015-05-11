@@ -16,7 +16,7 @@ using System.Collections;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 
-using log4net;
+//using log4net;
 using ZeroconfService;
 
 namespace Melloware.DACP {
@@ -33,7 +33,7 @@ namespace Melloware.DACP {
         public const string SERVICE_TYPE = "_touch-remote._tcp";
         public const int DEFAULT_SESSION_ID = 0;
 
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static NetServiceBrowser nsBrowser = new NetServiceBrowser();
         private readonly Dictionary<string,NetService> services = new Dictionary<string,NetService>();
         private DACPServer dacpServer;
@@ -42,17 +42,17 @@ namespace Melloware.DACP {
         /// Constructor creates the mDNS service listener.
         /// </summary>
         public DACPPairingServer(DACPServer server) {
-            LOG.Info("Initializing DACPPairingServer...");
+            Console.WriteLine("Initializing DACPPairingServer...");
             this.dacpServer = server;
             nsBrowser.AllowMultithreadedCallbacks = true;
             nsBrowser.DidFindService += new NetServiceBrowser.ServiceFound(NetServiceBrowser_DidFindService);
             nsBrowser.DidRemoveService += new NetServiceBrowser.ServiceRemoved(NetServiceBrowser_DidRemoveService);
 
             try {
-                LOG.InfoFormat("mDNS Version: {0}", NetService.DaemonVersion);
+                Console.WriteLine("mDNS Version: {0}", NetService.DaemonVersion);
                 nsBrowser.SearchForService(SERVICE_TYPE, "");
             } catch (Exception ex) {
-                LOG.Error("Apple Bonjour is not installed!", ex);
+                Console.WriteLine("Apple Bonjour is not installed!", ex);
                 throw new DACPBonjourException("Bonjour is required by this application and it was not found.  Please install Bonjour For Windowsfrom Apple.com");
             }
         }
@@ -61,7 +61,7 @@ namespace Melloware.DACP {
         /// Close the PairingServer which stops the mDNS browser and clears the services.
         /// </summary>
         public void Stop() {
-            LOG.Info("Shutting Down DACPPairingServer...");
+            Console.WriteLine("Shutting Down DACPPairingServer...");
             nsBrowser.Stop();
             services.Clear();
         }
@@ -98,11 +98,11 @@ namespace Melloware.DACP {
         /// <param name="service">the Service removed</param>
         /// <param name="moreComing">true if more services are coming</param>
         private void NetServiceBrowser_DidRemoveService(NetServiceBrowser browser, NetService service, bool moreComing) {
-            LOG.InfoFormat("NetServiceBrowser_DidRemoveService: {0}", service.Name);
+            Console.WriteLine("NetServiceBrowser_DidRemoveService: {0}", service.Name);
             services.Remove(service.Name);
             service.Dispose();
             if (!moreComing) {
-                LOG.Debug("No More coming so signal DACP Server we are done");
+                Console.WriteLine("No More coming so signal DACP Server we are done");
                 this.dacpServer.OnClientListChanged();
             }
         }
@@ -115,7 +115,7 @@ namespace Melloware.DACP {
         /// <param name="service">the Service found</param>
         /// <param name="moreComing">true if more services are coming</param>
         private void NetServiceBrowser_DidFindService(NetServiceBrowser browser, NetService service, bool moreComing) {
-            LOG.InfoFormat("NetServiceBrowser_DidFindService: {0}", service.Name);
+            Console.WriteLine("NetServiceBrowser_DidFindService: {0}", service.Name);
 
             service.DidResolveService += new NetService.ServiceResolved(NetService_DidResolveService);
             service.StartMonitoring();
@@ -123,7 +123,7 @@ namespace Melloware.DACP {
             service.ResolveWithTimeout(5);
 
             if (!moreComing) {
-                LOG.Debug("No More coming so signal DACP Server we are done");
+                Console.WriteLine("No More coming so signal DACP Server we are done");
             }
         }
 
@@ -132,9 +132,9 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="service">the Service that is resolved</param>
         void NetService_DidResolveService(NetService service) {
-            LOG.InfoFormat("NetServiceBrowser DidResolveService: {0}", service.Name);
-            LOG.DebugFormat(String.Format("Hostname: '{0}'", service.HostName));
-            LOG.DebugFormat(String.Format("INET addresses found: {0}", service.Addresses.Count));
+            Console.WriteLine("NetServiceBrowser DidResolveService: {0}", service.Name);
+            Console.WriteLine(String.Format("Hostname: '{0}'", service.HostName));
+            Console.WriteLine(String.Format("INET addresses found: {0}", service.Addresses.Count));
             ns_DidUpdateTXT(service);
             this.dacpServer.OnClientListChanged();
         }
@@ -146,15 +146,15 @@ namespace Melloware.DACP {
         /// <param name="service">the NetService to call back</param>
         /// <param name="passCode">the passcode to pair with</param>
         public void PairService(NetService service, string passCode) {
-            LOG.InfoFormat("Attempting to Pair Service: {0}", service.Name);
+            Console.WriteLine("Attempting to Pair Service: {0}", service.Name);
             try {
                 foreach (System.Net.IPEndPoint ep in service.Addresses) {
-                    LOG.InfoFormat("Pairing Service: {0}", service.ToString());
+                    Console.WriteLine("Pairing Service: {0}", service.ToString());
                     string pairingClient = ep.ToString();
                     if (pairingClient.StartsWith("0.0.0.0")) {
                         pairingClient = pairingClient.Replace("0.0.0.0", "localhost");
                     }
-                    LOG.InfoFormat("IP: {0}", pairingClient);
+                    Console.WriteLine("IP: {0}", pairingClient);
 
                     byte[] txt = service.TXTRecordData;
                     IDictionary dict = NetService.DictionaryFromTXTRecordData(txt);
@@ -165,18 +165,18 @@ namespace Melloware.DACP {
                         throw new InvalidOperationException("mDNS Service did not contain record for 'Pair'.");
                     }
                     string pairingCode = Pair(pair, passCode);
-                    LOG.InfoFormat("Pairing Code = {0}", pairingCode);
+                    Console.WriteLine("Pairing Code = {0}", pairingCode);
 
                     string requestUrl = String.Format("http://{0}/pair?pairingcode={1}&servicename={2}",pairingClient, pairingCode,this.dacpServer.ServiceName);
 
                     byte[] data = new byte[24];
                     using (WebClient client = new WebClient()) {
                         try {
-                            LOG.InfoFormat("Pairing Client Request = {0}", requestUrl);
+                            Console.WriteLine("Pairing Client Request = {0}", requestUrl);
                             data = client.DownloadData(requestUrl);
-                            LOG.InfoFormat("Pairing Client Responded");
+                            Console.WriteLine("Pairing Client Responded");
                         } catch (WebException ex) {
-                            LOG.Error("No Response from Pairing!!!");
+                            Console.WriteLine("No Response from Pairing!!!");
                             if (ex.Status == WebExceptionStatus.ProtocolError)
                                 if (((HttpWebResponse)ex.Response).StatusCode == HttpStatusCode.NotFound)
                                     throw new DACPPairingException("Invalid PIN code specified");
@@ -190,7 +190,7 @@ namespace Melloware.DACP {
                         reply = new PairingReply(data);
 
                         ulong guid = reply.PairingGuid;
-                        LOG.InfoFormat("Remote Device GUID After = {0}", guid);
+                        Console.WriteLine("Remote Device GUID After = {0}", guid);
 
                         if (DACPServer.PairingDatabase.DACPClients.ContainsKey(guid)) {
                             DACPServer.PairingDatabase.DACPClients.Remove(guid);
@@ -200,12 +200,12 @@ namespace Melloware.DACP {
                         // now we must release the latch and allow /login to respond
                         DACPServer.ReleaseAllLatches();
                     } catch (Exception ex) {
-                        LOG.Error("Error parsing Pairing Reply!");
+                        Console.WriteLine("Error parsing Pairing Reply!");
                         throw new DACPPairingException("Unexpected reply from device", ex);
                     }
                 }
             } catch (Exception ex) {
-                LOG.Error("HTTP GET Error", ex);
+                Console.WriteLine("HTTP GET Error", ex);
             }
         }
 
@@ -214,10 +214,10 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="service">the Service that has the TXT change</param>
         void ns_DidUpdateTXT(NetService service) {
-            LOG.DebugFormat("Did Update TXT Record: {0}", service.Name);
+            Console.WriteLine("Did Update TXT Record: {0}", service.Name);
             byte[] txt = service.TXTRecordData;
             IDictionary dict = NetService.DictionaryFromTXTRecordData(txt);
-            LOG.DebugFormat("TXT Records Count: {0}", dict.Count);
+            Console.WriteLine("TXT Records Count: {0}", dict.Count);
             foreach (DictionaryEntry kvp in dict) {
                 String key = (String)kvp.Key;
                 byte[] value = (byte[])kvp.Value;
@@ -233,7 +233,7 @@ namespace Melloware.DACP {
                     valueStr = "[Binary Data]";
                 }
 
-                LOG.DebugFormat("TXT Record: {0} = {1}", key, valueStr);
+                Console.WriteLine("TXT Record: {0} = {1}", key, valueStr);
             }
 
         }

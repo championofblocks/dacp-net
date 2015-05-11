@@ -11,7 +11,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -29,13 +29,13 @@ namespace Melloware.DACP {
 	/// </summary>
 	public class SpeakerNode:BaseNode {
 		// logger
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		/// <summary>
 		/// Default constructor
 		/// </summary>
 		public SpeakerNode() {
-			LOG.Debug("Creating SpeakerNode Node...");
+			Console.WriteLine("Creating SpeakerNode Node...");
 			this.Minm = "Computer";
 			this.Msma = 0;
 			this.Caia = TRUE;

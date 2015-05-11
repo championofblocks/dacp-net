@@ -12,7 +12,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -20,7 +20,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class FairPlayResponse:SessionBoundResponse, IErrorResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Constructs an UpdateResposne which returns revision number of the
@@ -28,7 +28,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public FairPlayResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating FairPlayResponse...");
+            Console.WriteLine("Creating FairPlayResponse...");
         }
 
         /// <summary>

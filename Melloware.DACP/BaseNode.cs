@@ -13,7 +13,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 
@@ -22,7 +22,7 @@ namespace Melloware.DACP {
     /// </summary>
     public abstract class BaseNode:DACPResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Item Id (unique)

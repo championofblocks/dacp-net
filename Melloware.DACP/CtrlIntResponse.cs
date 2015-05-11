@@ -15,7 +15,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 
 namespace Melloware.DACP {
@@ -43,7 +43,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class CtrlIntResponse:DACPResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private LinkedList<CtrlIntNode> mlcl = new LinkedList<CtrlIntNode>();
@@ -53,7 +53,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public CtrlIntResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating CtrlIntResponse...");
+            Console.WriteLine("Creating CtrlIntResponse...");
             this.Muty = 0;
             CtrlIntNode node = new CtrlIntNode();
             this.Mlcl.AddLast(node);

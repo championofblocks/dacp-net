@@ -17,7 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -27,7 +27,7 @@ namespace Melloware.DACP {
     /// </summary>
     public abstract class SessionBoundResponse:DACPResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private static readonly Dictionary<int, SessionInfo> sessions = new Dictionary<int, SessionInfo>();
@@ -39,11 +39,11 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public SessionBoundResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating SessionBoundResponse...");
+            Console.WriteLine("Creating SessionBoundResponse...");
 
             // in some cases we need to reuse calling the responses internally without an HTTP Request
             if (request == null) {
-                LOG.Debug("Using response class internally so skipping session check");
+                Console.WriteLine("Using response class internally so skipping session check");
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace Melloware.DACP {
         /// <returns>the SessionInfo based on the session-id in the request</returns>
         public static SessionInfo getSession(HttpListenerRequest request) {
             int sessionId = ValidateSession(request);
-            LOG.DebugFormat("Found SessionId = {0}", sessionId);
+            Console.WriteLine("Found SessionId = {0}", sessionId);
 
             SessionInfo info = null;
             lock(sessions)
@@ -77,7 +77,7 @@ namespace Melloware.DACP {
                 foreach (KeyValuePair<int, SessionInfo> kvp in sessions) {
                     SessionInfo session = kvp.Value;
                     session.CtrlIntRevision = session.CtrlIntRevision + 1;
-                    LOG.DebugFormat("New CtrlInt Value {0}", session.CtrlIntRevision);
+                    Console.WriteLine("New CtrlInt Value {0}", session.CtrlIntRevision);
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace Melloware.DACP {
                 foreach (KeyValuePair<int, SessionInfo> kvp in sessions) {
                     SessionInfo session = kvp.Value;
                     session.DatabaseRevision = session.DatabaseRevision + 1;
-                    LOG.DebugFormat("New Database Revision Value {0}", session.DatabaseRevision);
+                    Console.WriteLine("New Database Revision Value {0}", session.DatabaseRevision);
                 }
             }
         }
@@ -102,7 +102,7 @@ namespace Melloware.DACP {
         /// <param name="request">the HTTP request</param>
         /// <returns>the SessionId found or -1 if not found</returns>
         private  static int ValidateSession(HttpListenerRequest request) {
-            LOG.Debug("Security is enabled, so validating session-id");
+            Console.WriteLine("Security is enabled, so validating session-id");
 
             int sessionId = -1;
             try {
@@ -133,7 +133,7 @@ namespace Melloware.DACP {
         protected void TerminateSession() {
             if (Session == null) return;
 
-            LOG.WarnFormat("Terminating Session: {0}", Session.SessionId);
+            Console.WriteLine("Terminating Session: {0}", Session.SessionId);
 
             // increment both counter to release any pending HTTP requests
             Session.CtrlIntRevision = Session.CtrlIntRevision + 1;

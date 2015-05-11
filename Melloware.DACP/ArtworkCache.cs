@@ -10,7 +10,7 @@
 using System;
 using System.Net;
 
-using log4net;
+////using log4net;
 using Melloware.Core;
 
 namespace Melloware.DACP {

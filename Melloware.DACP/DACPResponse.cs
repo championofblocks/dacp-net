@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 
 using Melloware.Core;
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -240,7 +240,7 @@ namespace Melloware.DACP {
 		private static readonly Regex regexSingleQuotes = new Regex(@"'(?:\.|(\\\')|[^\''\n])*'", RegexOptions.IgnoreCase|RegexOptions.Compiled);
 
 		// logger
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		// fields
 		private int mstt = MSTT_OK; // #status (200 = OK)
@@ -284,7 +284,7 @@ namespace Melloware.DACP {
 				
 				QueryCollection = System.Web.HttpUtility.ParseQueryString(request.Url.Query);
 				foreach ( String s in QueryCollection.AllKeys ) {
-					LOG.DebugFormat( "    Param: {0,-10} {1}", s, QueryCollection[s] );
+					Console.WriteLine( "    Param: {0,-10} {1}", s, QueryCollection[s] );
 				}
 				
 				this.StartIndex = GetQueryIndexStart();
@@ -296,7 +296,7 @@ namespace Melloware.DACP {
 				ExtractParameters(GetEditParams());
 
 			} catch (Exception ex) {
-				LOG.Error("DACPResponse error getting HTTP properties: " + ex.Message, ex);
+				Console.WriteLine("DACPResponse error getting HTTP properties: " + ex.Message, ex);
 			}
 		}
 
@@ -315,7 +315,7 @@ namespace Melloware.DACP {
 					Match m;
 					// find all matches in between single quotes
 					for (m = regexSingleQuotes.Match(property); m.Success; m = m.NextMatch()) {
-						//LOG.DebugFormat("Match {0} = {1}",m.Value, m.Index);
+						//Console.WriteLine("Match {0} = {1}",m.Value, m.Index);
 						ExtractParam(m.Value);
 					}
 				}
@@ -356,11 +356,11 @@ namespace Melloware.DACP {
 						UInt64 iValue = UInt64.Parse(queryVal, System.Globalization.NumberStyles.HexNumber);
 						queryVal = iValue.ToString();
 					} catch (Exception ex) {
-						LOG.Error("DACPResponse error converting Hex property in ExtractParam: " + ex.Message, ex);
+						Console.WriteLine("DACPResponse error converting Hex property in ExtractParam: " + ex.Message, ex);
 					}
 				}
 
-				LOG.DebugFormat("    Query Param: {0} = {1}",queryCol, queryVal);
+				Console.WriteLine("    Query Param: {0} = {1}",queryCol, queryVal);
 				// add to the NamedValueCollection
 				queryParams.Add(queryCol, queryVal);
 			}
@@ -536,14 +536,14 @@ namespace Melloware.DACP {
 			try {
 				string propertyValue = request.QueryString[parameter];
 				propertyValue = propertyValue.Replace("'", "");
-				LOG.Debug(propertyValue);
+				Console.WriteLine(propertyValue);
 				string[] values = propertyValue.Split(':');
 				if (values.Length == 2) {
 					propertyValue = values[1];
 				}
 				propertyValue = propertyValue.Remove(0,2);
 				result = UInt64.Parse(propertyValue, System.Globalization.NumberStyles.HexNumber);
-				LOG.DebugFormat("Hex Property '{0}' = {1}", parameter, result);
+				Console.WriteLine("Hex Property '{0}' = {1}", parameter, result);
 			} catch (Exception) {
 				result = 0;
 			}
@@ -561,7 +561,7 @@ namespace Melloware.DACP {
 			try {
 				string propertyValue = request.QueryString[parameter];
 				propertyValue = propertyValue.Replace("'", "");
-				LOG.Debug(propertyValue);
+				Console.WriteLine(propertyValue);
 				string[] values = propertyValue.Split(':');
 				if (values.Length == 2) {
 					propertyValue = values[1];
@@ -570,7 +570,7 @@ namespace Melloware.DACP {
 				if (values.Length > 1) {
 					for (int i = 0; i < values.Length; i++) {
 						string hexProperty = values[i];
-						LOG.DebugFormat("Hex Property '{0}' = {1}", parameter, hexProperty);
+						Console.WriteLine("Hex Property '{0}' = {1}", parameter, hexProperty);
 						if (hexProperty.StartsWith("0x")) {
 							hexProperty = hexProperty.Remove(0,2);
 						}
@@ -578,7 +578,7 @@ namespace Melloware.DACP {
 					}
 				} else {
 					string hexProperty = propertyValue;
-					LOG.DebugFormat("Hex Property '{0}' = {1}", parameter, hexProperty);
+					Console.WriteLine("Hex Property '{0}' = {1}", parameter, hexProperty);
 					if (hexProperty.StartsWith("0x")) {
 						hexProperty = hexProperty.Remove(0,2);
 					}
@@ -586,7 +586,7 @@ namespace Melloware.DACP {
 				}
 
 			} catch (Exception ex) {
-				LOG.Error("ConvertHexParameterToInt64Array Exception", ex);
+				Console.WriteLine("ConvertHexParameterToInt64Array Exception", ex);
 				result.Add(0); //default to Computer speakers
 			}
 			return (ulong[]) result.ToArray(typeof(ulong));
@@ -613,7 +613,7 @@ namespace Melloware.DACP {
 				}
 				propertyValue = propertyValue.Remove(0,2);
 				result = Int32.Parse(propertyValue, System.Globalization.NumberStyles.HexNumber);
-				LOG.DebugFormat("Hex Property '{0}' = {1}", parameter, result);
+				Console.WriteLine("Hex Property '{0}' = {1}", parameter, result);
 			} catch (Exception) {
 				result = 0;
 			}
@@ -695,11 +695,11 @@ namespace Melloware.DACP {
 			if (this.HttpRequest.RawUrl.Contains(PROPERTY_CONTAINERS)) {
 				try {
 					string[] values = HttpRequest.RawUrl.Split('/');
-					LOG.Debug(values);
+					Console.WriteLine(values);
 					// the 5th item is the id (/databases/1/containers/2854/)
 					result = Convert.ToInt32(values[4]);
 				} catch (Exception ex) {
-					LOG.Warn("Error trying to get the container id so defaulting.", ex);
+					Console.WriteLine("Error trying to get the container id so defaulting.", ex);
 				}
 			}
 			return result;

@@ -17,7 +17,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>

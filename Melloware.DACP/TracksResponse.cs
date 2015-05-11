@@ -15,7 +15,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -70,7 +70,7 @@ namespace Melloware.DACP {
     public class TracksResponse:SessionBoundResponse {
 
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private LinkedList<TrackNode> mlcl = new LinkedList<TrackNode>();
@@ -80,7 +80,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public TracksResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating TracksResponse...");
+            Console.WriteLine("Creating TracksResponse...");
             this.Muty = 0;
             this.PlaylistId = 1;
 
@@ -88,7 +88,7 @@ namespace Melloware.DACP {
             if (request.RawUrl.Contains(PROPERTY_CONTAINERS)) {
                 this.PlaylistId = GetContainerId();
             } else {
-                LOG.InfoFormat("Track Query = {0}", this.GetQuery());
+                Console.WriteLine("Track Query = {0}", this.GetQuery());
             }
         }
 

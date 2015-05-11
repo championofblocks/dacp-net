@@ -14,7 +14,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 
-using log4net;
+//using log4net;
 using ZeroconfService;
 
 namespace Melloware.DACP {
@@ -27,7 +27,7 @@ namespace Melloware.DACP {
         public const string SERVICE_TYPE = "_touch-remote._tcp";
         public const int PORT = 1024;
 
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static HttpListener listener = new HttpListener();
         private static System.Threading.AutoResetEvent listenForNextRequest = new System.Threading.AutoResetEvent(false);
         private string applicationName;
@@ -58,7 +58,7 @@ namespace Melloware.DACP {
         /// Creates a NonBlocking listener to handle each HTTP request in a thread.
         /// </summary>
         public void Start() {
-            LOG.InfoFormat("Starting Listener http://*:{0}/...", PORT);
+            Console.WriteLine("Starting Listener http://*:{0}/...", PORT);
             listener.Prefixes.Add("http://*:"+PORT+"/");
             listener.Start();
 
@@ -96,7 +96,7 @@ namespace Melloware.DACP {
                 // because there will be a thread stopped waiting on the .EndGetContext()
                 // method, and again, that is just the way most Begin/End asynchronous
                 // methods of the .NET Framework work.
-                LOG.Warn("HttpListener Error", ex);
+                Console.WriteLine("HttpListener Error", ex);
                 return;
             } finally {
                 // Once we know we have a request (or exception), we signal the other thread
@@ -108,11 +108,11 @@ namespace Melloware.DACP {
 
             if (context == null) return;
 
-            LOG.DebugFormat("Start: {0}", DateTime.Now.ToString());
+            Console.WriteLine("Start: {0}", DateTime.Now.ToString());
 
 
             System.Net.HttpListenerRequest request = context.Request;
-            LOG.DebugFormat("{0}: {1}", PORT, request.RawUrl);
+            Console.WriteLine("{0}: {1}", PORT, request.RawUrl);
 
             if (request.HasEntityBody) {
                 using (System.IO.StreamReader sr = new System.IO.StreamReader(request.InputStream, request.ContentEncoding)) {
@@ -132,13 +132,13 @@ namespace Melloware.DACP {
                 DACPResponse dacpResponse = new PairingClientResponse();
                 byte[] output = dacpResponse.GetBytes();
 
-                LOG.Debug(new UTF8Encoding(false).GetString(output));
+                Console.WriteLine(new UTF8Encoding(false).GetString(output));
                 response.StatusCode = (int)HttpStatusCode.OK;
                 response.ContentLength64 = output.LongLength;
                 response.OutputStream.Write(output, 0, output.Length);
             }
 
-            LOG.DebugFormat("End: {0}", DateTime.Now.ToString());
+            Console.WriteLine("End: {0}", DateTime.Now.ToString());
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Melloware.DACP {
         /// </summary>
         private void PublishTouchRemoteService() {
             try {
-                LOG.DebugFormat("mDNS: {0}", NetService.DaemonVersion);
+                Console.WriteLine("mDNS: {0}", NetService.DaemonVersion);
                 String domain = "";
                 String name = "0000000000000000000000000000000000000001";
                 touchRemoteService = new NetService(domain, SERVICE_TYPE, name, PORT);
@@ -167,7 +167,7 @@ namespace Melloware.DACP {
                 touchRemoteService.TXTRecordData = NetService.DataFromTXTRecordDictionary(dict);
                 touchRemoteService.Publish();
             } catch (Exception ex) {
-                LOG.Error("Error publishing mDNS TouchRemote Service", ex);
+                Console.WriteLine("Error publishing mDNS TouchRemote Service", ex);
             }
         }
 
@@ -176,7 +176,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="service">the NetService published</param>
         void publishService_DidPublishService(NetService service) {
-            LOG.InfoFormat("Published mDNS Service: domain({0}) type({1}) name({2})", service.Domain, service.Type, service.Name);
+            Console.WriteLine("Published mDNS Service: domain({0}) type({1}) name({2})", service.Domain, service.Type, service.Name);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Melloware.DACP {
         /// <param name="service">the NetService NOT published</param>
         /// <param name="exception">the Exception reason why the service was not published</param>
         void publishService_DidNotPublishService(NetService service, DNSServiceException exception) {
-            LOG.InfoFormat("DNSServiceException occured: {0}", exception.Message);
+            Console.WriteLine("DNSServiceException occured: {0}", exception.Message);
         }
     }
 }

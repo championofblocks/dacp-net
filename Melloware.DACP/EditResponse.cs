@@ -15,7 +15,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -39,7 +39,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class EditResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         // fields
         private LinkedList<EditNode> mlit = new LinkedList<EditNode>(); // playlist container item id

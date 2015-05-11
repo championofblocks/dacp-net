@@ -14,7 +14,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -30,7 +30,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class UpdateResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Constructs an UpdateResposne which returns revision number of the
@@ -38,18 +38,18 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public UpdateResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating UpdateResponse...");
+            Console.WriteLine("Creating UpdateResponse...");
             string revisionStr = request.QueryString[PROPERTY_REVISION];
             int revision = 0;
             Int32.TryParse(revisionStr, out revision);
             this.Musr = revision;
 
-            LOG.Info("UpdateResponse Blocking until signal received");
+            Console.WriteLine("UpdateResponse Blocking until signal received");
             while (this.Musr > Session.DatabaseRevision) {
                 Thread.Sleep(SessionInfo.SLEEP_INTERVAL);
             }
 
-            LOG.Warn("UpdateResponse Waking up!");
+            Console.WriteLine("UpdateResponse Waking up!");
             this.Musr = Session.DatabaseRevision + 1;
         }
 

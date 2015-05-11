@@ -15,7 +15,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-using log4net;
+////using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -44,7 +44,7 @@ namespace Melloware.DACP {
         public const string PROPERTY_NOW_PLAYING = "nowplayingartwork";
 
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private MemoryStream artwork;
@@ -62,7 +62,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to get the parameters</param>
         public ArtworkResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating ArtworkResponse...");
+            Console.WriteLine("Creating ArtworkResponse...");
             string rawURL = request.RawUrl;
 
             // check whether this is Now Playing or a specific artwork request
@@ -73,16 +73,16 @@ namespace Melloware.DACP {
                 int id = NOW_PLAYING;
                 try {
                     string[] values = rawURL.Split('/');
-                    LOG.Debug(values);
+                    Console.WriteLine(values);
                     // the 5th item is the id (/databases/38/items/2854/)
                     id = Convert.ToInt32(values[4]);
                 } catch (Exception ex) {
-                    LOG.Warn("ArtworkResponse Error trying to get the item id so defaulting to Now Playing.", ex);
+					Console.WriteLine("ArtworkResponse Error trying to get the item id so defaulting to Now Playing.\n" + ex);
                 }
                 this.ItemId = id;
             }
 
-            LOG.DebugFormat("Artwork for Item = {0}", this.ItemId);
+            Console.WriteLine("Artwork for Item = {0}", this.ItemId);
 
             try {
                 this.Height = Convert.ToInt32(request.QueryString["mh"]);
@@ -94,9 +94,9 @@ namespace Melloware.DACP {
                     this.Width = RETINA_WIDTH;
                 }
             } catch (Exception ex) {
-                LOG.Warn("ArtworkResponse Error trying to get the height and width values.", ex);
+                Console.WriteLine("ArtworkResponse Error trying to get the height and width values.", ex);
             }
-            LOG.DebugFormat("Height = {0} Width = {1}", this.Height, this.Width);
+            Console.WriteLine("Height = {0} Width = {1}", this.Height, this.Width);
             
             // group-type=albums
             GroupType = request.QueryString[PROPERTY_GROUP_TYPE];
@@ -173,9 +173,9 @@ namespace Melloware.DACP {
         /// <param name="height">the height you want to make the PNG</param>
         /// <returns>a MemoryStream full of image in bytes</returns>
         public static MemoryStream LoadArtwork(string filePath, int width, int height) {
-            LOG.DebugFormat("LoadArtwork: {0} {1} {2}", width, height, filePath);
+            Console.WriteLine("LoadArtwork: {0} {1} {2}", width, height, filePath);
             if (!File.Exists(filePath)) {
-                LOG.WarnFormat("Artwork file {0} does not exist!", filePath);
+                Console.WriteLine("Artwork file {0} does not exist!", filePath);
                 return null;
             }
 
@@ -201,9 +201,9 @@ namespace Melloware.DACP {
         /// <param name="filePath">the path to the image to load</param>
         /// <returns>a Memorystream of bytes of the image</returns>
         public static MemoryStream LoadArtwork(string filePath) {
-            LOG.DebugFormat("LoadArtwork: {0}", filePath);
+            Console.WriteLine("LoadArtwork: {0}", filePath);
             if (!File.Exists(filePath)) {
-                LOG.WarnFormat("Artwork file {0} does not exist!", filePath);
+                Console.WriteLine("Artwork file {0} does not exist!", filePath);
                 return null;
             }
             MemoryStream result = new MemoryStream();
@@ -231,7 +231,7 @@ namespace Melloware.DACP {
         /// <param name="height">the new height</param>
         /// <returns></returns>
         private static byte[] ResizeArtwork(MemoryStream stream, int width, int height) {
-            LOG.DebugFormat("ResizeArtwork: {0} {1}", width, height);
+            Console.WriteLine("ResizeArtwork: {0} {1}", width, height);
             byte[] result = null;
             Bitmap original = new Bitmap(stream);
             Bitmap scaled = new Bitmap(original, new Size(width, height));

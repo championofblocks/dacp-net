@@ -13,7 +13,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -32,7 +32,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class VolumeResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Constructs a Volumeresponse which gets the volume field out of the
@@ -41,7 +41,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPListenerRequest</param>
         public VolumeResponse(HttpListenerRequest request):base(request) {
-            LOG.DebugFormat("Creating VolumeResponse...");
+            Console.WriteLine("Creating VolumeResponse...");
             int volume = 50;
 
             try {
@@ -60,7 +60,7 @@ namespace Melloware.DACP {
                 }
 
             } catch (Exception ex) {
-                LOG.Warn("VolumeResponse Contructor Error!", ex);
+                Console.WriteLine("VolumeResponse Contructor Error!", ex);
             }
 
             if (volume > 100) {
@@ -69,7 +69,7 @@ namespace Melloware.DACP {
                 volume = 0;
             }
 
-            LOG.DebugFormat("Volume = {0}", volume);
+            Console.WriteLine("Volume = {0}", volume);
             this.Cmvo = volume;
         }
 

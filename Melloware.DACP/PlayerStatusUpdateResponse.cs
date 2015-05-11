@@ -14,7 +14,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -59,7 +59,7 @@ namespace Melloware.DACP {
 
 
 		// logger
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		//fields
 		public int Cmsr;       // #media revision
@@ -96,7 +96,7 @@ namespace Melloware.DACP {
 		/// </summary>
 		/// <param name="request">the HTTPRequest to use</param>
 		public PlayerStatusUpdateResponse(HttpListenerRequest request):base(request) {
-			LOG.Debug("Creating PlayerStatusUpdateResponse...");
+			Console.WriteLine("Creating PlayerStatusUpdateResponse...");
 			string revisionStr = request.QueryString[PROPERTY_REVISION];
 			int revision = 0;
 			Int32.TryParse(revisionStr, out revision);
@@ -123,12 +123,12 @@ namespace Melloware.DACP {
 			this.Cast = 180000;
 			this.Casu = TRUE;
 
-			LOG.DebugFormat("PlayerStatusUpdateResponse Blocking until signal received CMSR = {0}", this.Cmsr);
+			Console.WriteLine("PlayerStatusUpdateResponse Blocking until signal received CMSR = {0}", this.Cmsr);
 			while (this.Cmsr > Session.CtrlIntRevision) {
 				Thread.Sleep(SessionInfo.SLEEP_INTERVAL);
 			}
 
-			LOG.InfoFormat("PlayerStatusUpdateResponse Waking up CMSR = {0}, CTRLINT = {1}!", this.Cmsr, Session.CtrlIntRevision);
+			Console.WriteLine("PlayerStatusUpdateResponse Waking up CMSR = {0}, CTRLINT = {1}!", this.Cmsr, Session.CtrlIntRevision);
 			this.Cmsr = Session.CtrlIntRevision + 1;
 		}
 

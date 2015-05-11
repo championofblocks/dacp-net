@@ -15,7 +15,7 @@ using System.Net;
 using System.Collections;
 using System.Collections.Generic;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -67,7 +67,7 @@ namespace Melloware.DACP {
 	/// </summary>
 	public class ServerInfoResponse:DACPResponse {
 		// logger
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		// fields
 		public int Mpro; 	// #DMAP Protocol Version
@@ -110,7 +110,7 @@ namespace Melloware.DACP {
 		/// </summary>
 		/// <param name="request">the HTTPRequest to use</param>
 		public ServerInfoResponse(HttpListenerRequest request):base(request) {
-			LOG.DebugFormat("Creating ServerInfoResponse...");
+			Console.WriteLine("Creating ServerInfoResponse...");
 			this.Mpro = 131078; // taken from Itunes 10.1.3
 			this.Apro = 196619; // taken from Itunes 10.1.3
 			this.Aesv = 196614; // taken from Itunes 10.1.3

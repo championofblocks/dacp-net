@@ -12,7 +12,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
 	/// <summary>
@@ -42,7 +42,7 @@ namespace Melloware.DACP {
 	///                    asai   8      593042020b1764f5 == 6426709244801148149
 	/// </summary>
 	public class TrackNode:BaseNode {
-		private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+		//private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		public TrackNode() {
 			this.AeHV = 0;
@@ -67,7 +67,7 @@ namespace Melloware.DACP {
 		}
 
 		public TrackNode(int Id, string artist, string album, string title, ulong albumId, int trackLength, ushort trackNumber, byte rating) : this() {
-			LOG.DebugFormat("Track: {0} - {1}", trackNumber, title);
+			Console.WriteLine("Track: {0} - {1}", trackNumber, title);
 			this.Asai = albumId;
 			this.Asal = album;
 			this.Asar = artist;

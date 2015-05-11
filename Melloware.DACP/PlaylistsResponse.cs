@@ -14,7 +14,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -141,13 +141,13 @@ namespace Melloware.DACP {
     public class PlaylistsResponse:SessionBoundResponse {
     	
     	// logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private LinkedList<PlaylistNode> mlcl = new LinkedList<PlaylistNode>();
 
         public PlaylistsResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating PlaylistsResponse...");
+            Console.WriteLine("Creating PlaylistsResponse...");
             this.Muty = 0;
         }
 

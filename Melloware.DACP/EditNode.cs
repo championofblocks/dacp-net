@@ -13,7 +13,7 @@ using System;
 using System.Text;
 using System.IO;
 
-using log4net;
+////using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -25,7 +25,7 @@ namespace Melloware.DACP {
     public class EditNode:BaseNode {
 
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Default constructor

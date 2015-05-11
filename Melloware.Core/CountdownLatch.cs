@@ -10,7 +10,7 @@
 
 using System;
 using System.Threading;
-using log4net;
+////using log4net;
 
 namespace Melloware.Core {
     /// <summary>
@@ -42,7 +42,7 @@ namespace Melloware.Core {
     ///
     /// </summary>
     public class CountDownLatch {
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private readonly ManualResetEvent mutex = new ManualResetEvent(false);
         private int remaining;
 
@@ -55,7 +55,7 @@ namespace Melloware.Core {
                 if(remaining > 0) {
                     remaining--;
                     if(0 == remaining) {
-                        LOG.Debug("Latch Released!");
+                        Console.WriteLine("Latch Released!");
                         mutex.Set();
                     }
                 }

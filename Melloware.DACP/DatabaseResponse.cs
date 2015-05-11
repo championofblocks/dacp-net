@@ -13,7 +13,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+////using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -41,7 +41,7 @@ namespace Melloware.DACP {
     public class DatabaseResponse:SessionBoundResponse {
     	
     	// logger for this class
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
         // database kind constants
         public const int DATABASE_KIND_LOCAL = 1;
@@ -50,7 +50,7 @@ namespace Melloware.DACP {
 
         // default constructor
         public DatabaseResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating DatabaseResponse...");
+            Console.WriteLine("Creating DatabaseResponse...");
             this.Muty = 0;
             this.Mtco = 1;
             this.Mrco = 1;

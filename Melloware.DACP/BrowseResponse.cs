@@ -15,7 +15,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     // declares the enum
@@ -61,7 +61,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class BrowseResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         // fields
         private LinkedList<String> genres = null;
@@ -80,7 +80,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public BrowseResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating BrowseResponse...");
+            Console.WriteLine("Creating BrowseResponse...");
             this.Muty = 0;
             this.Mtco = 1;
             this.Mrco = 1;

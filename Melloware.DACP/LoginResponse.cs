@@ -12,7 +12,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -28,15 +28,15 @@ namespace Melloware.DACP {
     /// </summary>
     public class LoginResponse:DACPResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public LoginResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating LoginResponse...");
+            Console.WriteLine("Creating LoginResponse...");
             this.Mstt = 200;
 
             // converts 0x0000000000000001 to ulong = 1
             this.Guid = ConvertHexParameterToLong(request, PROPERTY_PAIRING_GUID);
-            LOG.DebugFormat("Login Pairing GUID = {0}", this.Guid);
+            Console.WriteLine("Login Pairing GUID = {0}", this.Guid);
 
             if (this.Guid <= 0) {
                 throw new DACPSecurityException("Pairing GUID is not found in HTTP Rquest!");

@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Melloware.DACP</RootNamespace>
     <AssemblyName>Melloware.DACP</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SourceAnalysisOverrideSettingsFile>C:\Users\Melloware\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -17,7 +17,7 @@
     <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>.\lib\keyfile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>lib\keyfile.snk</AssemblyOriginatorKeyFile>
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyMode>File</AssemblyOriginatorKeyMode>
   </PropertyGroup>
@@ -44,6 +44,17 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>..\DACP-Remote\DACP-Remote\packages-local\$CONFIGURATION</OutputPath>
+    <EnvironmentVariables>
+      <EnvironmentVariables>
+        <Variable name="DEBUG_LOG_ON" value="true" />
+      </EnvironmentVariables>
+    </EnvironmentVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\DACP-Remote\DACP-Remote\packages-local\$CONFIGURATION</OutputPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
   <ItemGroup>
     <Reference Include="log4net">
@@ -53,16 +64,12 @@
       <HintPath>lib\Melloware.DACP.XmlSerializers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="ZeroconfService">
       <HintPath>lib\ZeroconfService.dll</HintPath>
     </Reference>
@@ -123,9 +130,5 @@
     <EmbeddedResource Include="Melloware.DACP\DACPPairingForm.resx">
       <DependentUpon>DACPPairingForm.Designer.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Melloware.Core" />
-    <Folder Include="Melloware.DACP" />
   </ItemGroup>
 </Project>

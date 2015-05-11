@@ -14,7 +14,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 
-using log4net;
+//using log4net;
 
 namespace Melloware.DACP {
     /// <summary>
@@ -22,7 +22,7 @@ namespace Melloware.DACP {
     /// </summary>
     public class PropertyResponse:SessionBoundResponse {
         // logger
-        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        //private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         //fields
         public byte Caps;      // #play status: 4=playing, 3=paused, 2=stopped
@@ -57,7 +57,7 @@ namespace Melloware.DACP {
         /// </summary>
         /// <param name="request">the HTTPRequest to use</param>
         public PropertyResponse(HttpListenerRequest request):base(request) {
-            LOG.Debug("Creating PropertyResponse...");
+            Console.WriteLine("Creating PropertyResponse...");
             this.Caps = PAUSED; //default to paused
 			this.Cmvo = 0;
 			this.Cash = 0;
